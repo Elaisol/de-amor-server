@@ -7,21 +7,53 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const bcryptSalt = 10;
 
-router.post("/login", passport.authenticate("local"), function(req, res) {
-  res.status(200).json(req.user);
+// router.post("/login", passport.authenticate("local"), function(req, res) {
+//   res.status(200).json(req.user);
+// });
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, theUser, failureDetails) => {
+    if (err) {
+      res
+        .status(500)
+        .json({ message: "Something went wrong authenticating user" });
+      return;
+    }
+
+    if (!theUser) {
+      res.status(401).json(failureDetails);
+      return;
+    }
+
+    // save user in session
+    req.login(theUser, err => {
+      if (err) {
+        res.status(500).json({ message: "Session save went bad." });
+        return;
+      }
+      res.status(200).json(theUser);
+    });
+  })(req, res, next);
 });
 
 router.post("/signup", (req, res, next) => {
-  const username = req.body.username;
+  const email = req.body.username;
   const password = req.body.password;
-  if (username === "" || password === "") {
+
+  if (email === "" || password === "") {
     res.status(400).json({ message: "Digite seu email e senha" });
     return;
   }
 
-  User.findOne({ username }, (err, user) => {
-    if(err){
-      res.status(500).json({ message: "Email check went bad."});
+  if (password.length < 8) {
+    res
+      .status(400)
+      .json({ message: "A senha deve conter o mínimo 8 caracteres" });
+    return;
+  }
+
+  User.findOne({ email }, (err, user) => {
+    if (err) {
+      res.status(500).json({ message: "Tente novamente" });
       return;
     }
 
@@ -34,29 +66,45 @@ router.post("/signup", (req, res, next) => {
     const hashPass = bcrypt.hashSync(password, salt);
 
     const newUser = new User({
-      username: username,
+      email,
       password: hashPass
     });
-
-    newUser.save()
-      .then(newUser => {
-        console.log('oi', newUser)
+console.log(newUser)
+    newUser.save(err => {
+      if (err) {
+        res
+          .status(400)
+          .json({ message: "Saving user to database went wrong." });
+        return;
+      }
+      req.login(newUser, err => {
+        if (err) {
+          res.status(500).json({ message: "Login after signup went bad." });
+          return;
+        }
         res.status(200).json(newUser);
-      })
-      .catch(err => {
-        console.log('oi', err)
-
-        res.status(400).json(err);
       });
+    });
   });
 });
 
-router.get("/logout", (req, res) => {
-  console.log(req.user)
+// router.get("/logout", (req, res) => {
+//   req.logout();
+//   res.status(200).json(req.user);
+// });
+
+router.get('/logout', (req, res, next) => {
+  // req.logout() is defined by passport
+  console.log("hi", req, res)
   req.logout();
-  console.log(req.user)
-  res.status(200).json(req.user);
+  console.log("hi", req, res)
+  res.status(200).json({ message: 'Log out success!' });
+  console.log("hi", req, res)
+
 });
 
+router.get('/loggedin', (req, res, next) => {
+  res.status(200).json(req.user);
+});
 
 module.exports = router;
