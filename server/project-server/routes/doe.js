@@ -1,16 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const router  = express.Router();
+const router = express.Router();
 const Animal = require('../models/Animal');
 const cors = require('cors');
 
 
-router.post('/doe', (req, res, next)=>{
+router.post('/doe', (req, res, next) => {
   if (req.user === null) {
-    res.status(400).json({message: "Faça o login"});
-
+    res.status(400).json({ message: "Faça o login" });
   }
-    const { species, sexo, name, color, porte, age, raça, description, address, city } = req.body;
+  const { species, sexo, name, color, porte, age, raça, description, address, city } = req.body;
   console.log(req.body);
   Animal.create({
     species,
@@ -21,48 +20,48 @@ router.post('/doe', (req, res, next)=>{
     age,
     raça,
     description,
-    location : {
+    location: {
       address,
       city
-    },user: req.user.id
+    }, user: {req.user.id}
   })
-  .then(response => {
-    res.json(response);
-  })
-  .catch(err => {
-    res.json(err);
-  })
+    .then(response => {
+      res.json(response);
+    })
+    .catch(err => {
+      res.json(err);
+    })
 });
 
 
-router.put('/doe/:id', (req, res, next)=>{
+router.put('/doe/:id', (req, res, next) => {
 
-  if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: 'Specified id is not valid' });
     return;
   }
 
   Animal.findByIdAndUpdate(req.params.id, req.body)
     .then(() => {
-      res.json({message: `Project with ${req.params.id} is updated successfully.`});
+      res.json({ message: `Project with ${req.params.id} is updated successfully.` });
     })
     .catch(err => {
       res.json(err);
     })
 })
 
-router.delete('/doe/:id', (req, res, next)=>{
-  
-  if(!mongoose.Types.ObjectId.isValid(req.params.id)) {
+router.delete('/doe/:id', (req, res, next) => {
+
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: 'Specified id is not valid' });
     return;
   }
 
   Animal.findByIdAndRemove(req.params.id)
     .then(() => {
-      res.json({message: `Animal with ${req.params.id} is removed successfully.`});
+      res.json({ message: `Animal with ${req.params.id} is removed successfully.` });
     })
-    .catch( err => {
+    .catch(err => {
       res.json(err);
     })
 })

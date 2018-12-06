@@ -1,5 +1,5 @@
 const express = require('express');
-const router  = express.Router();
+const router = express.Router();
 const Animal = require('../models/Animal');
 
 /* GET home page */
