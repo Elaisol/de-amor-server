@@ -52,8 +52,11 @@ router.post("/signup", (req, res, next) => {
 });
 
 router.get("/logout", (req, res) => {
+  console.log(req.user)
   req.logout();
+  console.log(req.user)
   res.status(200).json(req.user);
 });
+
 
 module.exports = router;
