@@ -13,7 +13,7 @@ const animalSchema = new Schema({
 	porte : { type: String, required: true },
 	raça : { type: String, required: true},
   description : { type: String, required: true },
-  avatarUrl : { type: String, default: 'images/default-avatar.png' },
+  // avatarUrl : { type: Url default: 'images/default-avatar.png' },
   location : {
     address : String,
     city : String

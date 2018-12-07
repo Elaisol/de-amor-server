@@ -36,18 +36,20 @@ router.post("/login", (req, res, next) => {
 });
 
 router.post("/signup", (req, res, next) => {
+  const name = req.body.name;
   const email = req.body.username;
   const password = req.body.password;
+  console.log(req.body)
 
-  if (email === "" || password === "") {
-    res.status(400).json({ message: "Digite seu email e senha" });
+  if (name === "" || email === "" || password === "") {
+    res.status(400).json({ message: "Digite seu nome, email e senha" });
     return;
   }
 
-  if (password.length < 8) {
+  if (password.length < 2) {
     res
       .status(400)
-      .json({ message: "A senha deve conter o mínimo 8 caracteres" });
+      .json({ message: "A senha deve conter o mínimo 2 caracteres" });
     return;
   }
 
@@ -66,10 +68,11 @@ router.post("/signup", (req, res, next) => {
     const hashPass = bcrypt.hashSync(password, salt);
 
     const newUser = new User({
+      name,
       email,
       password: hashPass
     });
-console.log(newUser)
+    console.log(newUser);
     newUser.save(err => {
       if (err) {
         res
@@ -88,22 +91,12 @@ console.log(newUser)
   });
 });
 
-// router.get("/logout", (req, res) => {
-//   req.logout();
-//   res.status(200).json(req.user);
-// });
-
-router.get('/logout', (req, res, next) => {
-  // req.logout() is defined by passport
-  console.log("hi", req, res)
+router.get("/logout", (req, res, next) => {
   req.logout();
-  console.log("hi", req, res)
-  res.status(200).json({ message: 'Log out success!' });
-  console.log("hi", req, res)
-
+  res.status(200).json({ message: "Log out success!" });
 });
 
-router.get('/loggedin', (req, res, next) => {
+router.get("/loggedin", (req, res, next) => {
   res.status(200).json(req.user);
 });
 

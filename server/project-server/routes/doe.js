@@ -12,6 +12,7 @@ router.post('/doe', (req, res, next)=>{
   }
     const { species, sexo, name, color, porte, age, raça, description, address, city } = req.body;
   console.log(req.body);
+
   Animal.create({
     species,
     sexo,

@@ -8,8 +8,8 @@ router.get('/', (req, res, next) => {
 });
 
 // doe route:
-router.get('/doe', (req, res, next) => {
-  Animal.find()
+router.get('/doe/:id', (req, res, next) => {
+  Animal.find({user:req.params.id})
     .then(animals => {
       console.log(animals)
       res.status(200).json(animals);
