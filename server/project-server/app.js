@@ -70,7 +70,7 @@ const authrouter = require('./routes/auth');
 app.use('/auth', authrouter);
 
 const doe = require('./routes/doe');
-app.use('/doe', doe);
+app.use('/', doe);
 
 // app.use(express.static(__dirname + '../../client'))
 
