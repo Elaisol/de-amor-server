@@ -2,7 +2,6 @@ const express = require('express');
 
 const Router = express.Router();
 const mongoose = require('mongoose');
-
 const Animal = require('../models/Animal');
 const User = require('../models/User');
 
@@ -37,7 +36,12 @@ Router.post('/doe', (req, res, next) => {
     city,
   } = req.body;
 
-
+router.post('/doe', (req, res, next) => {
+  if (req.user === null) {
+    res.status(400).json({ message: "Faça o login" });
+  }
+  const { species, sexo, name, color, porte, age, raça, description, address, city } = req.body;
+  console.log(req.body);
   Animal.create({
     species,
     gender,
@@ -61,7 +65,8 @@ Router.post('/doe', (req, res, next) => {
     });
 });
 
-Router.put('/doe/:id', (req, res, next) => {
+router.put('/doe/:id', (req, res, next) => {
+
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: 'Specified id is not valid' });
     return;
@@ -85,7 +90,7 @@ Router.delete('/doe/:id', (req, res, next) => {
     .then(() => {
       res.json({ message: `Animal with ${req.params.id} is removed successfully.` });
     })
-    .catch((err) => {
+    .catch(err => {
       res.json(err);
     });
 });
