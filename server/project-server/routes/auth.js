@@ -1,6 +1,6 @@
 const express = require("express");
 const passport = require("passport");
-const router = express.Router();
+const Router = express.Router();
 const User = require("../models/User");
 
 // Bcrypt to encrypt passwords
@@ -10,7 +10,7 @@ const bcryptSalt = 10;
 // router.post("/login", passport.authenticate("local"), function(req, res) {
 //   res.status(200).json(req.user);
 // });
-router.post("/login", (req, res, next) => {
+Router.post("/login", (req, res, next) => {
   passport.authenticate("local", (err, theUser, failureDetails) => {
     if (err) {
       res
@@ -35,7 +35,7 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-router.post("/signup", (req, res, next) => {
+Router.post("/signup", (req, res, next) => {
   const name = req.body.name;
   const email = req.body.username;
   const password = req.body.password;
@@ -82,7 +82,8 @@ router.post("/signup", (req, res, next) => {
         return;
       }
       req.login(newUser, err => {
-        if (err) {
+        if (err) {    console.log(name, username, password)
+
           res.status(500).json({ message: "Login after signup went bad." });
           return;
         }
@@ -92,13 +93,13 @@ router.post("/signup", (req, res, next) => {
   });
 });
 
-router.get("/logout", (req, res, next) => {
+Router.get("/logout", (req, res, next) => {
   req.logout();
   res.status(200).json({ message: "Log out success!" });
 });
 
-router.get("/loggedin", (req, res, next) => {
+Router.get("/loggedin", (req, res, next) => {
   res.status(200).json(req.user);
 });
 
-module.exports = router;
+module.exports = Router;

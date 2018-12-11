@@ -63,15 +63,25 @@ app.use(flash());
 require('./passport')(app);
     
 
-const index = require('./routes/index');
-app.use('/', index);
+// const index = require('./routes/index');
+// app.use('/', index);
 
 const authrouter = require('./routes/auth');
-app.use('/auth', authrouter);
+app.use('/', authrouter);
 
-const doe = require('./routes/doe');
-app.use('/', doe);
+// const doe = require('./routes/doe');
+// app.use('/', doe);
 
-// app.use(express.static(__dirname + '../../client'))
+// rota do antigo adote
+const animals = require('./routes/animals/animals');
+app.use('/', animals);
+
+// rota do doe/:id (animal)
+const animalSingle  = require('./routes/animals/animalSingle');
+app.use('/', animalSingle);
+
+// rota do doe/id(usuário)
+const userAnimal = require('./routes/user/userAnimal');
+app.use('/', userAnimal);
 
 module.exports = app;

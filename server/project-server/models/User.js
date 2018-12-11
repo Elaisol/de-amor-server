@@ -4,15 +4,11 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
 	name : {type: String, require: true},
 	email : { type: String, required: true},
-	password : { type : String, required : true, minlength : 8},
+	password : { type : String, required : true},
 	
-	avatarUrl: { type: String, default: 'images/default-avatar.png' },
 },
 {
-	timestamps: { 
-		createdAt: "created_at",
-		updatedAt: "updated_at"
-	}
+	timestamps: true,
 });
 
 const User = mongoose.model('User', userSchema);

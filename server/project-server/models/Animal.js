@@ -5,26 +5,23 @@ const Schema = mongoose.Schema;
 
 
 const animalSchema = new Schema({
-  species : { type: String, required: true},
-  sexo : { type: String, required: true },
-  name : { type: String, required: true },
-  color : { type: String, required:true },
+  filePath: { type: String, required:false},
+  type : { type: String, required: false},
+  gender : { type: String, required: false },
+  name : { type: String, required: false },
+  color : { type: String, required:false },
 	age : { type: Number, min: 0, max: 30 },
-	porte : { type: String, required: true },
-	raça : { type: String, required: true},
-  description : { type: String, required: true },
-  // avatarUrl : { type: Url default: 'images/default-avatar.png' },
+	size : { type: String, required: false },
+	breed : { type: String, required: false},
+  description : { type: String, required: false },
   location : {
     address : String,
     city : String
 	},
-	user: { type: Schema.Types.ObjectId, ref: 'User'},
+	owner: { type: Schema.Types.ObjectId, ref: 'User'},
 },
 {
-  timestamps: {
-    createdAt: "created_at",
-    updatedAt: "updated_at"
-  }
+  timestamps: true,
 });
 
 const Animal = mongoose.model('Animal', animalSchema);
