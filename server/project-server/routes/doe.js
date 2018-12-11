@@ -1,44 +1,57 @@
 const express = require('express');
+
+const Router = express.Router();
 const mongoose = require('mongoose');
 
-const router = express.Router();
 const Animal = require('../models/Animal');
+const User = require('../models/User');
 
-// doe route:
-router.get('/doe/:id', (req, res, next) => {
-  Animal.find({ user: req.params.id })
-    .then((animals) => {
-      console.log(animals);
-      res.status(200).json(animals);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+// Route to get all Animal
+Router.get('/doe/:id', (req, res, next) => {
+  console.log(req.params.id);
+  Animal.find({ owner: req.params.id }).populate('Animal')
+    .then(animal => res.status(200).json(animal))
+    .catch(err => res.status(400).json(err));
 });
 
-router.post('/doe', (req, res, next) => {
-  if (req.user === null) {
-    res.status(400).json({ message: 'Faça o login' });
-  }
+Router.get('/doe/animal/:id', (req, res, next) => {
+  console.log(req.params.id);
+  Animal.findById(req.params.id)
+    .then(animal => res.status(200).json(animal))
+    .catch(err => res.status(400).json(err));
+});
+
+// Route to create a new Animal
+Router.post('/doe', (req, res, next) => {
+  console.log(req.user);
   const {
-    species, sexo, name, color, porte, age, raça, description, address, city,
+    species,
+    gender,
+    name,
+    color,
+    age,
+    size,
+    breed,
+    description,
+    address,
+    city,
   } = req.body;
-  console.log(req.body);
+
 
   Animal.create({
     species,
-    sexo,
+    gender,
     name,
     color,
-    porte,
     age,
-    raça,
+    size,
+    breed,
     description,
     location: {
       address,
       city,
     },
-    user: req.user.id,
+    owner: req.user.id,
   })
     .then((response) => {
       res.json(response);
@@ -48,24 +61,22 @@ router.post('/doe', (req, res, next) => {
     });
 });
 
-
-router.put('/doe/:id', (req, res, next) => {
+Router.put('/doe/:id', (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).json({ message: 'Specified id is not valid' });
     return;
   }
-
   Animal.findByIdAndUpdate(req.params.id, req.body)
     .then(() => {
-      res.json({ message: `Project with ${req.params.id} is updated successfully.` });
+      res.json({ message: `Animal with ${req.params.id} is updated successfully.` });
     })
     .catch((err) => {
       res.json(err);
     });
 });
 
-router.delete('/doe/:id', (req, res, next) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+Router.delete('/doe/:id', (req, res, next) => {
+  if (!mongoose.Types.ObjectId.isValid({ animal: req.params.id })) {
     res.status(400).json({ message: 'Specified id is not valid' });
     return;
   }
@@ -80,4 +91,4 @@ router.delete('/doe/:id', (req, res, next) => {
 });
 
 
-module.exports = router;
+module.exports = Router;

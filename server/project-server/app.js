@@ -9,6 +9,8 @@ const path = require('path');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
+
+// CORS SETTINGS HERE TO ALLOW CROSS-ORIGIN INTERACTION:
 const cors = require('cors');
 
 
@@ -47,10 +49,14 @@ app.use(session({
 app.use(flash());
 require('./passport')(app);
 
+// ROUTES MIDDLEWARE STARTS HERE:
 const authrouter = require('./routes/auth');
+const adote = require('./routes/adote');
 const doe = require('./routes/doe');
 
-app.use('/auth', authrouter);
+app.use('/', authrouter);
+app.use('/', adote);
 app.use('/', doe);
+
 
 module.exports = app;
