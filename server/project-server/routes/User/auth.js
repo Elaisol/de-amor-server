@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 
 const bcryptSalt = 10;
 
-const User = require('../models/User');
+const User = require('../../models/User');
 
 Router.post('/signup', (req, res, next) => {
   const name = req.body.name;
@@ -68,8 +68,7 @@ Router.post('/login', (req, res, next) => {
     if (err) {
       console.log(err);
       res.status(500).json({ message: 'Something went wrong authenticating user.' });
-      return
-
+      return;
     }
     if (!theUser) {
       // "failureDetails" contains the error messages

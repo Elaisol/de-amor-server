@@ -3,15 +3,16 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const animalSchema = new Schema({
-  filePath: { type: String },
-  species: { type: String, required: false },
-  gender: { type: String, required: false },
-  name: { type: String, required: false },
-  color: { type: String, required: false },
-  age: { type: Number },
-  size: { type: String, required: false },
-  breed: { type: String, required: false },
-  description: { type: String, required: false },
+  imageUrl: { type: String, required: true },
+  type: { type: String, required: true },
+  gender: { type: String, required: true },
+  name: { type: String, required: true },
+  color: { type: String, required: true },
+  age: { type: String, required: true },
+  size: { type: String, required: true },
+  breed: { type: String, required: true },
+  description: { type: String, required: true },
+  contacts: { type: String, required: true },
   location: {
     address: String,
     city: String,

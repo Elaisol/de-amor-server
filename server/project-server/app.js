@@ -50,13 +50,16 @@ app.use(flash());
 require('./passport')(app);
 
 // ROUTES MIDDLEWARE STARTS HERE:
-const authrouter = require('./routes/auth');
-const adote = require('./routes/adote');
-const doe = require('./routes/doe');
+const authRouter = require('./routes/User/auth');
+const animals = require('./routes/Animals/animals');
+const singleAnimal = require('./routes/Animals/singleAnimal');
 
-app.use('/', authrouter);
-app.use('/', adote);
-app.use('/', doe);
+const userAnimal = require('./routes/User/userAnimal');
+
+app.use('/', authRouter);
+app.use('/', animals);
+app.use('/', singleAnimal);
+app.use('/', userAnimal);
 
 
 module.exports = app;
